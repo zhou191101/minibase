@@ -1,6 +1,7 @@
 package org.apache.minibase;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class Bytes {
 
@@ -13,7 +14,7 @@ public class Bytes {
 
   public static byte[] toBytes(String s) throws IOException {
     if (s == null) return new byte[0];
-    return s.getBytes("UTF-8");
+    return s.getBytes(StandardCharsets.UTF_8);
   }
 
   public static byte[] toBytes(int x) {
@@ -62,7 +63,7 @@ public class Bytes {
 
   public static int toInt(byte[] a) {
     return (a[0] << 24) & 0xFF000000 | (a[1] << 16) & 0x00FF0000 | (a[2] << 8) & 0x0000FF00
-        | (a[3] << 0) & 0x000000FF;
+        | a[3] & 0x000000FF;
   }
 
   public static long toLong(byte[] a) {
@@ -93,8 +94,8 @@ public class Bytes {
   public static int hash(byte[] key) {
     if (key == null) return 0;
     int h = 1;
-    for (int i = 0; i < key.length; i++) {
-      h = (h << 5) + h + key[i];
+    for (byte b : key) {
+      h = (h << 5) + h + b;
     }
     return h;
   }
